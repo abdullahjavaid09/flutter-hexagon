@@ -5,6 +5,8 @@ import '../hexagon_widget.dart';
 
 enum GridType { EVEN, ODD }
 
+const double toLongDim = 1.1547005; // ratio of pointy dim to flat dim
+
 extension _GridTypeExtension on GridType {
   bool displace(int mainIndex, int crossIndex) {
     if (crossIndex == 0) {
@@ -33,6 +35,10 @@ class HexagonOffsetGrid extends StatelessWidget {
   ///
   /// [color] - Background color of this grid.
   ///
+  /// [crossMainAxisAlignment] - MainAxisAlignment to pass to resulting Row/Column in the cross axis
+  ///
+  /// [mainAxisAlignment] - MainAxisAlignment to pass to resulting Row/Column
+  ///
   /// [padding] - Grid padding.
   ///
   /// [hexagonBuilder] - Used as template for tiles. Will be overridden by [buildTile].
@@ -44,6 +50,8 @@ class HexagonOffsetGrid extends StatelessWidget {
     required this.columns,
     required this.rows,
     this.color,
+    this.crossMainAxisAlignment = MainAxisAlignment.start,
+    this.mainAxisAlignment = MainAxisAlignment.start,
     this.padding,
     this.buildTile,
     this.buildChild,
@@ -61,6 +69,10 @@ class HexagonOffsetGrid extends StatelessWidget {
   ///
   /// [color] - Background color of this grid.
   ///
+  /// [crossMainAxisAlignment] - MainAxisAlignment to pass to resulting Row/Column in the cross axis
+  ///
+  /// [mainAxisAlignment] - MainAxisAlignment to pass to resulting Row/Column
+  ///
   /// [padding] - Grid padding.
   ///
   /// [hexagonBuilder] - Used as template for tiles. Will be overridden by [buildTile].
@@ -72,6 +84,8 @@ class HexagonOffsetGrid extends StatelessWidget {
     required this.columns,
     required this.rows,
     this.color,
+    this.crossMainAxisAlignment = MainAxisAlignment.start,
+    this.mainAxisAlignment = MainAxisAlignment.start,
     this.padding,
     this.buildTile,
     this.buildChild,
@@ -87,6 +101,10 @@ class HexagonOffsetGrid extends StatelessWidget {
   ///
   /// [color] - Background color of this grid.
   ///
+  /// [crossMainAxisAlignment] - MainAxisAlignment to pass to resulting Row/Column in the cross axis
+  ///
+  /// [mainAxisAlignment] - MainAxisAlignment to pass to resulting Row/Column
+  ///
   /// [padding] - Grid padding.
   ///
   /// [hexagonBuilder] - Used as template for tiles. Will be overridden by [buildTile].
@@ -98,6 +116,8 @@ class HexagonOffsetGrid extends StatelessWidget {
     required this.columns,
     required this.rows,
     this.color,
+    this.crossMainAxisAlignment = MainAxisAlignment.start,
+    this.mainAxisAlignment = MainAxisAlignment.start,
     this.padding,
     this.buildTile,
     this.buildChild,
@@ -113,6 +133,10 @@ class HexagonOffsetGrid extends StatelessWidget {
   ///
   /// [color] - Background color of this grid.
   ///
+  /// [crossMainAxisAlignment] - MainAxisAlignment to pass to resulting Row/Column in the cross axis
+  ///
+  /// [mainAxisAlignment] - MainAxisAlignment to pass to resulting Row/Column
+  ///
   /// [padding] - Grid padding.
   ///
   /// [hexagonBuilder] - Used as template for tiles. Will be overridden by [buildTile].
@@ -124,6 +148,8 @@ class HexagonOffsetGrid extends StatelessWidget {
     required this.columns,
     required this.rows,
     this.color,
+    this.crossMainAxisAlignment = MainAxisAlignment.start,
+    this.mainAxisAlignment = MainAxisAlignment.start,
     this.padding,
     this.buildTile,
     this.buildChild,
@@ -136,6 +162,8 @@ class HexagonOffsetGrid extends StatelessWidget {
   final int columns;
   final int rows;
   final Color? color;
+  final MainAxisAlignment crossMainAxisAlignment;
+  final MainAxisAlignment mainAxisAlignment;
   final EdgeInsets? padding;
   final HexagonWidgetBuilder? hexagonBuilder;
   final Widget Function(int col, int row)? buildChild;
@@ -147,14 +175,22 @@ class HexagonOffsetGrid extends StatelessWidget {
 
   Widget _mainAxis(List<Widget> Function(int count) children) {
     return hexType.isPointy
-        ? Column(children: children.call(rows + _displaceRows))
-        : Row(children: children.call(columns + _displaceColumns));
+        ? Column(
+            mainAxisAlignment: mainAxisAlignment,
+            children: children.call(rows + _displaceRows))
+        : Row(
+            mainAxisAlignment: mainAxisAlignment,
+            children: children.call(columns + _displaceColumns));
   }
 
   Widget _crossAxis(List<Widget> Function(int count) children) {
     return hexType.isPointy
-        ? Row(children: children.call(columns + _displaceColumns))
-        : Column(children: children.call(rows + _displaceRows));
+        ? Row(
+            mainAxisAlignment: crossMainAxisAlignment,
+            children: children.call(columns + _displaceColumns))
+        : Column(
+            mainAxisAlignment: crossMainAxisAlignment,
+            children: children.call(rows + _displaceRows));
   }
 
   Size _hexSize(double maxWidth, double maxHeight) {
@@ -165,11 +201,11 @@ class HexagonOffsetGrid extends StatelessWidget {
       var gridWidth;
       var gridHeight;
       if (hexType.isFlat) {
-        gridWidth = 1 + (0.75 * (columns - 1));
+        gridWidth = (1 + (0.75 * (columns - 1))) * toLongDim;
         gridHeight = rows + (_displaceRows / 2);
       } else {
         gridWidth = columns + (_displaceColumns / 2);
-        gridHeight = 1 + (0.75 * (rows - 1));
+        gridHeight = (1 + (0.75 * (rows - 1))) * toLongDim;
       }
       var gridAspectRatio = gridWidth / gridHeight;
       var constraintAspectRatio = maxWidth / maxHeight;

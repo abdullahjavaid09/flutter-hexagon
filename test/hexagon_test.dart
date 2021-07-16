@@ -18,7 +18,7 @@ void main() {
     expect(find.byType(HexagonWidget), findsOneWidget);
   });
 
-  testWidgets('HexagonGird', (WidgetTester tester)async {
+  testWidgets('HexagonGrid', (WidgetTester tester) async {
     await tester.pumpWidget(HexagonGrid.flat(
       height: 660,
       width: 633,
@@ -44,7 +44,7 @@ void main() {
     expect(flat != pointy, true);
     expect(pointy == pointy2, true);
   });
-  test("Coordiantes distance", () {
+  test("Coordinates distance", () {
     var zero = Coordinates.zero;
     var one = Coordinates.axial(1, 0);
     var two = Coordinates.axial(1, 3);
