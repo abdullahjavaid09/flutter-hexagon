@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:hexagon/src/hexagon_outline.dart';
 
 import 'hexagon_path_builder.dart';
 
 /// This class is responsible for painting HexagonWidget color and shadow in proper shape.
 class HexagonPainter extends CustomPainter {
-  HexagonPainter(this.pathBuilder, {this.color, this.elevation = 0});
+  HexagonPainter(this.pathBuilder,
+      {this.color, this.elevation = 0, this.outline});
 
   final HexagonPathBuilder pathBuilder;
   final double elevation;
   final Color? color;
+  final HexagonOutline? outline;
 
   final Paint _paint = Paint();
   Path? _path;
@@ -25,6 +28,13 @@ class HexagonPainter extends CustomPainter {
     if ((elevation) > 0)
       canvas.drawShadow(path, Colors.black, elevation, false);
     canvas.drawPath(path, _paint);
+    if (outline != null) {
+      final _strokePaint = Paint();
+      _strokePaint.color = outline!.color;
+      _strokePaint.strokeWidth = outline!.strokeWidth;
+      _strokePaint.style = PaintingStyle.stroke;
+      canvas.drawPath(path, _strokePaint);
+    }
   }
 
   @override
@@ -44,9 +54,13 @@ class HexagonPainter extends CustomPainter {
           runtimeType == other.runtimeType &&
           pathBuilder == other.pathBuilder &&
           elevation == other.elevation &&
-          color == other.color;
+          color == other.color &&
+          outline == other.outline;
 
   @override
   int get hashCode =>
-      pathBuilder.hashCode ^ elevation.hashCode ^ color.hashCode;
+      pathBuilder.hashCode ^
+      elevation.hashCode ^
+      color.hashCode ^
+      outline.hashCode;
 }

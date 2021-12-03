@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'hexagon_clipper.dart';
+import 'hexagon_outline.dart';
 import 'hexagon_painter.dart';
 import 'hexagon_path_builder.dart';
 import 'hexagon_type.dart';
@@ -30,12 +31,13 @@ class HexagonWidget extends StatelessWidget {
     this.height,
     this.color,
     this.child,
+    this.outline,
     this.padding = 0.0,
     this.cornerRadius = 0.0,
     this.elevation = 0,
     this.inBounds = true,
     required this.type,
-  })   : assert(width != null || height != null),
+  })  : assert(width != null || height != null),
         assert(elevation >= 0),
         super(key: key);
 
@@ -58,6 +60,7 @@ class HexagonWidget extends StatelessWidget {
     this.height,
     this.color,
     this.child,
+    this.outline,
     this.padding = 0.0,
     this.elevation = 0,
     this.cornerRadius = 0.0,
@@ -86,6 +89,7 @@ class HexagonWidget extends StatelessWidget {
     this.height,
     this.color,
     this.child,
+    this.outline,
     this.padding = 0.0,
     this.elevation = 0,
     this.cornerRadius = 0.0,
@@ -104,6 +108,7 @@ class HexagonWidget extends StatelessWidget {
   final Color? color;
   final double padding;
   final double cornerRadius;
+  final HexagonOutline? outline;
 
   Size _innerSize() {
     var flatFactor = type.flatFactor(inBounds);
@@ -144,11 +149,8 @@ class HexagonWidget extends StatelessWidget {
         width: innerSize.width,
         height: innerSize.height,
         child: CustomPaint(
-          painter: HexagonPainter(
-            pathBuilder,
-            color: color,
-            elevation: elevation,
-          ),
+          painter: HexagonPainter(pathBuilder,
+              color: color, elevation: elevation, outline: outline),
           child: ClipPath(
             clipper: HexagonClipper(pathBuilder),
             child: OverflowBox(
